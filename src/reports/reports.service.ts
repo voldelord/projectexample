@@ -1,26 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Report } from './entities/report.entity';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 
 @Injectable()
 export class ReportsService {
-  create(createReportDto: CreateReportDto) {
-    return 'This action adds a new report';
+  constructor(
+    @InjectRepository(Report) private reportRepository: Repository<Report>,
+  ) {}
+
+  async createReport(report: CreateReportDto) {
+    const newReport = this.reportRepository.create(report);
+    return this.reportRepository.save(newReport);
   }
 
-  findAll() {
-    return `This action returns all reports`;
+  getReports() {
+    return this.reportRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} report`;
+  async getReport(id: number) {
+    const reportFound = await this.reportRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!reportFound) {
+      return new HttpException('Report Not Found', HttpStatus.NOT_FOUND);
+    }
+    return reportFound;
   }
 
-  update(id: number, updateReportDto: UpdateReportDto) {
-    return `This action updates a #${id} report`;
+  async deleteReport(id: number) {
+    const result = await this.reportRepository.delete({ id });
+
+    if (result.affected === 0) {
+      return new HttpException('Report not found', HttpStatus.NOT_FOUND);
+    }
+
+    return result;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} report`;
+  async updateReport(id: number, report: UpdateReportDto) {
+    const reportFound = await this.reportRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!reportFound) {
+      return new HttpException('Report Not Found', HttpStatus.NOT_FOUND);
+    }
+    const updatedReport = Object.assign(reportFound, report);
+    return this.reportRepository.save(updatedReport);
   }
 }

@@ -1,34 +1,47 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ReportsService } from './reports.service';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Param,
+  Delete,
+  ParseIntPipe,
+  Patch,
+} from '@nestjs/common';
 import { CreateReportDto } from './dto/create-report.dto';
+import { ReportsService } from './reports.service';
+import { Report } from './entities/report.entity';
 import { UpdateReportDto } from './dto/update-report.dto';
 
 @Controller('reports')
 export class ReportsController {
-  constructor(private readonly reportsService: ReportsService) {}
-
-  @Post()
-  create(@Body() createReportDto: CreateReportDto) {
-    return this.reportsService.create(createReportDto);
-  }
+  constructor(private reportsService: ReportsService) {}
 
   @Get()
-  findAll() {
-    return this.reportsService.findAll();
+  getReports(): Promise<Report[]> {
+    return this.reportsService.getReports();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reportsService.findOne(+id);
+  getReport(@Param('id', ParseIntPipe) id: number) {
+    return this.reportsService.getReport(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
-    return this.reportsService.update(+id, updateReportDto);
+  @Post()
+  createReport(@Body() newReport: CreateReportDto) {
+    return this.reportsService.createReport(newReport);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reportsService.remove(+id);
+  deleteReport(@Param('id', ParseIntPipe) id: number) {
+    return this.reportsService.deleteReport(id);
+  }
+
+  @Patch(':id')
+  updateReport(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() report: UpdateReportDto,
+  ) {
+    return this.reportsService.updateReport(id, report);
   }
 }

@@ -1,4 +1,3 @@
-export class Report {}
 import {
   Column,
   CreateDateColumn,
@@ -9,7 +8,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class SellerRating {
+export class Report {
   @PrimaryGeneratedColumn()
   id: number;
 
