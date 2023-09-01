@@ -11,6 +11,10 @@ import { PaymentsModule } from './payments/payments.module';
 import { SellerRatingsModule } from './sellerratings/sellerratings.module';
 import { PromotionsModule } from './promotions/promotions.module';
 import { ReportsModule } from './reports/reports.module';
+import { DiscountcouponsModule } from './discountcoupons/discountcoupons.module';
+import { ShopsModule } from './shops/shops.module';
+import { FavoritesModule } from './favorites/favorites.module';
+import { VideostreamingsModule } from './videostreamings/videostreamings.module';
 
 @Module({
   imports: [
@@ -35,6 +39,10 @@ import { ReportsModule } from './reports/reports.module';
     SellerRatingsModule,
     PromotionsModule,
     ReportsModule,
+    DiscountcouponsModule,
+    ShopsModule,
+    FavoritesModule,
+    VideostreamingsModule,
   ],
   controllers: [],
   providers: [],
